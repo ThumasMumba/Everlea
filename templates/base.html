@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Everlea Weddings{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <header
+      class="border-b"
+      style="
+        border-color: var(--color-line);
+        background-color: var(--color-paper);
+      "
+    >
+      <nav
+        class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between"
+      >
+        <a
+          href="{{ url_for('index') }}"
+          class="font-display text-2xl tracking-wide"
+          style="color: var(--color-forest)"
+        >
+          Everlea <span style="color: var(--color-gold)">Weddings</span>
+        </a>
+
+        <div class="flex items-center gap-3 text-sm">
+          {% if current_user.is_authenticated %} {% if current_user.is_admin %}
+          <a
+            href="{{ url_for('admin_dashboard') }}"
+            class="px-3 py-2 font-medium"
+            style="color: var(--color-forest)"
+            >Admin dashboard</a
+          >
+          {% else %}
+          <a
+            href="{{ url_for('dashboard') }}"
+            class="px-3 py-2 font-medium"
+            style="color: var(--color-forest)"
+            >My dashboard</a
+          >
+          {% endif %}
+          <span
+            class="hidden sm:inline text-xs"
+            style="color: var(--color-sage)"
+            >{{ current_user.name }}</span
+          >
+          <a
+            href="{{ url_for('logout') }}"
+            class="btn-outline px-4 py-2 rounded-full"
+            >Log out</a
+          >
+          {% else %}
+          <a
+            href="{{ url_for('login') }}"
+            class="px-3 py-2 font-medium"
+            style="color: var(--color-forest)"
+            >Log in</a
+          >
+          <a
+            href="{{ url_for('signup') }}"
+            class="btn-primary px-4 py-2 rounded-full"
+            >Sign up</a
+          >
+          {% endif %}
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-1">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="max-w-6xl mx-auto px-6 pt-5 space-y-2">
+        {% for category, message in messages %}
+        <div
+          class="rounded-lg px-4 py-3 text-sm border {% if category == 'error' %} border-red-200 bg-red-50 text-red-700 {% else %} border-green-200 bg-green-50 text-green-700 {% endif %}"
+        >
+          {{ message }}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </main>
+
+    <footer
+      class="mt-16 py-8 border-t text-center text-xs"
+      style="border-color: var(--color-line); color: var(--color-sage)"
+    >
+      Everlea — venue discovery &amp; booking, kept simple.
+    </footer>
+
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

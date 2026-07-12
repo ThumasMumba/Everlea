@@ -1,0 +1,137 @@
+{% extends "base.html" %} {% block title %}Everlea Weddings — Find your venue{%
+endblock %} {% block content %}
+<section
+  class="max-w-6xl mx-auto px-6 pt-16 pb-20 grid md:grid-cols-2 gap-14 items-center"
+>
+  <div>
+    <p
+      class="divider-leaf text-xs tracking-[0.2em] uppercase font-semibold mb-6"
+      style="max-width: 220px"
+    >
+      Est. 2026
+    </p>
+    <h1
+      class="font-display text-5xl md:text-6xl leading-[1.05]"
+      style="color: var(--color-forest-dark)"
+    >
+      Every wedding starts with the right room.
+    </h1>
+    <p
+      class="mt-6 text-base leading-relaxed"
+      style="color: var(--color-ink); max-width: 46ch"
+    >
+      Everlea is where couples browse real venues, send a booking request in a
+      few clicks, and hear back from a venue coordinator — no phone tag, no
+      spreadsheets, no guesswork.
+    </p>
+    <div class="mt-9 flex flex-wrap gap-4">
+      <a
+        href="{{ url_for('signup') }}"
+        class="btn-primary px-7 py-3 rounded-full text-sm font-semibold"
+      >
+        Start planning — sign up
+      </a>
+      <a
+        href="{{ url_for('login') }}"
+        class="btn-outline px-7 py-3 rounded-full text-sm font-semibold"
+      >
+        I already have an account
+      </a>
+    </div>
+    <p class="mt-6 text-xs" style="color: var(--color-sage)">
+      Managing venues for a company instead?
+      <a
+        href="{{ url_for('admin_login') }}"
+        class="underline"
+        style="color: var(--color-forest)"
+        >Admin login</a
+      >
+    </p>
+  </div>
+
+  <div class="relative flex justify-center">
+    <div
+      class="invite-card rounded-sm px-10 py-12 w-full max-w-sm"
+      style="transform: rotate(-2deg)"
+    >
+      <div class="text-center">
+        <div
+          class="wax-seal w-12 h-12 rounded-full mx-auto flex items-center justify-center font-display text-white text-lg"
+        >
+          E
+        </div>
+        <p
+          class="mt-6 text-xs tracking-[0.3em] uppercase"
+          style="color: var(--color-gold)"
+        >
+          You're invited to plan
+        </p>
+        <h2
+          class="font-display text-3xl mt-3"
+          style="color: var(--color-forest-dark)"
+        >
+          The Ivory Orchard
+        </h2>
+        <p class="mt-2 text-sm" style="color: var(--color-sage)">
+          Lusaka, Zambia · up to 220 guests
+        </p>
+        <div class="divider-leaf mt-6 mb-6 text-xs">◆</div>
+        <p class="text-sm" style="color: var(--color-ink)">
+          Status:
+          <span class="status-pill status-confirmed ml-1">Confirmed</span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="invite-card rounded-sm px-10 py-12 w-full max-w-sm absolute -z-10 opacity-40"
+      style="transform: rotate(3deg); top: 18px; left: 18px"
+    ></div>
+  </div>
+</section>
+
+<section
+  class="border-t"
+  style="border-color: var(--color-line); background-color: var(--color-blush)"
+>
+  <div class="max-w-6xl mx-auto px-6 py-16 grid sm:grid-cols-3 gap-10">
+    <div>
+      <p class="font-display text-3xl" style="color: var(--color-gold)">01</p>
+      <h3
+        class="font-display text-xl mt-2"
+        style="color: var(--color-forest-dark)"
+      >
+        Browse venues
+      </h3>
+      <p class="mt-2 text-sm" style="color: var(--color-ink)">
+        Search and filter real venues by name or location, with capacity and
+        pricing up front.
+      </p>
+    </div>
+    <div>
+      <p class="font-display text-3xl" style="color: var(--color-gold)">02</p>
+      <h3
+        class="font-display text-xl mt-2"
+        style="color: var(--color-forest-dark)"
+      >
+        Request a date
+      </h3>
+      <p class="mt-2 text-sm" style="color: var(--color-ink)">
+        Send a booking request with your date and guest count in under a minute.
+      </p>
+    </div>
+    <div>
+      <p class="font-display text-3xl" style="color: var(--color-gold)">03</p>
+      <h3
+        class="font-display text-xl mt-2"
+        style="color: var(--color-forest-dark)"
+      >
+        Get confirmed
+      </h3>
+      <p class="mt-2 text-sm" style="color: var(--color-ink)">
+        A coordinator reviews your request and your dashboard updates the moment
+        it's approved.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% block title %}Admin login — Everlea Weddings{%
+endblock %} {% block content %}
+<section class="max-w-md mx-auto px-6 py-16">
+  <div
+    class="rounded-2xl px-8 py-10"
+    style="background-color: var(--color-forest-dark)"
+  >
+    <p
+      class="text-xs tracking-[0.25em] uppercase font-semibold mb-4"
+      style="color: var(--color-gold-light)"
+    >
+      Administrator access
+    </p>
+    <h1 class="font-display text-3xl text-white">
+      Sign in to manage the platform
+    </h1>
+    <p class="mt-2 text-sm" style="color: #c7d2c9">
+      Venues, users, and booking approvals live here.
+    </p>
+
+    <form
+      method="POST"
+      action="{{ url_for('admin_login') }}"
+      class="mt-8 space-y-5"
+    >
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1 text-white"
+          >Admin email</label
+        >
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          value="{{ email or '' }}"
+          class="w-full rounded-lg border-0 px-4 py-2.5 text-sm focus:outline-none"
+          placeholder="admin@vows.com"
+        />
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium mb-1 text-white"
+          >Password</label
+        >
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          class="w-full rounded-lg border-0 px-4 py-2.5 text-sm focus:outline-none"
+          placeholder="Your password"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="btn-gold w-full py-3 rounded-full text-sm font-semibold"
+      >
+        Sign in as administrator
+      </button>
+    </form>
+  </div>
+
+  <p class="mt-6 text-sm text-center" style="color: var(--color-sage)">
+    Looking for a venue instead?
+    <a
+      href="{{ url_for('login') }}"
+      class="underline"
+      style="color: var(--color-forest)"
+      >Client login</a
+    >
+  </p>
+</section>
+{% endblock %}

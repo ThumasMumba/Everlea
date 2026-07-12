@@ -1,0 +1,146 @@
+/* ============================================================
+   Wedding Plan Management System — design tokens
+   Theme: "Botanical Invitation" — inspired by pressed botanicals,
+   brass foil lettering, and layered stationery paper, rather than
+   generic cream/terracotta defaults.
+   ============================================================ */
+
+:root {
+  --color-ink: #1f2a22;       /* near-black, green-cast body text */
+  --color-forest: #2b4436;    /* primary deep green */
+  --color-forest-dark: #1b2d22;
+  --color-sage: #7e9478;      /* mid green accent / secondary */
+  --color-paper: #f3f1e6;     /* sage-tinted ivory background */
+  --color-blush: #e9dcd3;     /* soft card / section background */
+  --color-gold: #a8823d;      /* brass / gold accent */
+  --color-gold-light: #cba967;
+  --color-white: #ffffff;
+  --color-line: #d9d2c2;
+
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'Work Sans', sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* ---- Signature element: layered "invitation card" hero ---- */
+.invite-card {
+  position: relative;
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  box-shadow: 0 30px 60px -20px rgba(31, 42, 34, 0.35);
+}
+
+.invite-card::before {
+  content: "";
+  position: absolute;
+  inset: 14px;
+  border: 1px solid var(--color-gold);
+  pointer-events: none;
+}
+
+.wax-seal {
+  background: radial-gradient(circle at 30% 30%, var(--color-gold-light), var(--color-gold) 70%);
+  box-shadow: 0 6px 14px rgba(168, 130, 61, 0.45);
+}
+
+.divider-leaf {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-gold);
+}
+.divider-leaf::before,
+.divider-leaf::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-line);
+}
+
+/* ---- Buttons ---- */
+.btn-primary {
+  background-color: var(--color-forest);
+  color: var(--color-white);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.btn-primary:hover {
+  background-color: var(--color-forest-dark);
+  transform: translateY(-1px);
+}
+
+.btn-gold {
+  background-color: var(--color-gold);
+  color: var(--color-white);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.btn-gold:hover {
+  background-color: #8f6d31;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  border: 1px solid var(--color-forest);
+  color: var(--color-forest);
+  background: transparent;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.btn-outline:hover {
+  background-color: var(--color-forest);
+  color: var(--color-white);
+}
+
+/* ---- Status pills ---- */
+.status-pill {
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.status-pending   { background: #f3e6c8; color: #7a5b13; }
+.status-confirmed { background: #dce8dc; color: var(--color-forest-dark); }
+.status-rejected  { background: #f0d9d5; color: #8a3527; }
+
+/* ---- Focus visibility (accessibility floor) ---- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ---- Reduced motion respect ---- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+.venue-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-line);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.venue-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 35px -18px rgba(31, 42, 34, 0.35);
+}
+
+.table-row-alt:nth-child(even) {
+  background-color: #faf8f1;
+}

@@ -1,0 +1,223 @@
+{% extends "base.html" %} {% block title %}My dashboard — Everlea Weddings{%
+endblock %} {% block content %}
+<section class="max-w-6xl mx-auto px-6 py-12">
+  <p
+    class="divider-leaf text-xs tracking-[0.2em] uppercase font-semibold mb-4"
+    style="max-width: 180px"
+  >
+    Client dashboard
+  </p>
+  <h1 class="font-display text-4xl" style="color: var(--color-forest-dark)">
+    Welcome, {{ current_user.name.split(' ')[0] }}
+  </h1>
+
+  <!-- ============================ Notifications ============================ -->
+  <div class="mt-10">
+    <h2 class="font-display text-2xl" style="color: var(--color-forest-dark)">
+      Your booking requests
+    </h2>
+    {% if appointments %}
+    <div class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for a in appointments %}
+      <div
+        class="rounded-xl border p-5"
+        style="border-color: var(--color-line); background: var(--color-white)"
+      >
+        <div class="flex items-start justify-between gap-3">
+          <h3
+            class="font-display text-xl"
+            style="color: var(--color-forest-dark)"
+          >
+            {{ a.venue.name }}
+          </h3>
+          <span class="status-pill status-{{ a.status }}">{{ a.status }}</span>
+        </div>
+        <p class="text-xs mt-1" style="color: var(--color-sage)">
+          {{ a.venue.location }}
+        </p>
+        <p class="text-sm mt-3" style="color: var(--color-ink)">
+          Event date: {{ a.event_date.strftime('%d %b %Y') }}
+        </p>
+        {% if a.guest_count %}
+        <p class="text-sm" style="color: var(--color-ink)">
+          Guests: {{ a.guest_count }}
+        </p>
+        {% endif %} {% if a.status == 'confirmed' %}
+        <p class="mt-3 text-sm font-medium" style="color: var(--color-forest)">
+          You're confirmed — go ahead and start planning the rest of your
+          wedding for this date.
+        </p>
+        {% elif a.status == 'rejected' %}
+        <p class="mt-3 text-sm" style="color: #8a3527">
+          This request wasn't approved. Feel free to request a different date or
+          venue.
+        </p>
+        {% else %}
+        <p class="mt-3 text-sm" style="color: var(--color-sage)">
+          Waiting on the venue coordinator to review this request.
+        </p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="mt-4 text-sm" style="color: var(--color-sage)">
+      You haven't requested any bookings yet — browse venues below to get
+      started.
+    </p>
+    {% endif %}
+  </div>
+
+  <!-- ============================ Venue search ============================ -->
+  <div class="mt-14 flex items-end justify-between flex-wrap gap-4">
+    <h2 class="font-display text-2xl" style="color: var(--color-forest-dark)">
+      Available venues
+    </h2>
+    <input
+      id="venue-search"
+      type="text"
+      placeholder="Search by name or location…"
+      class="rounded-full border px-5 py-2.5 text-sm w-full sm:w-72 focus:outline-none"
+      style="border-color: var(--color-line)"
+      oninput="filterVenues(this.value)"
+    />
+  </div>
+
+  <div id="venue-grid" class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for venue in venues %}
+    <div
+      class="venue-card rounded-xl overflow-hidden"
+      data-name="{{ venue.name|lower }}"
+      data-location="{{ venue.location|lower }}"
+    >
+      {% if venue.image_url %}
+      <img
+        src="{{ venue.image_url }}?auto=format&fit=crop&w=600&q=60"
+        alt="{{ venue.name }}"
+        class="w-full h-40 object-cover"
+      />
+      {% else %}
+      <div class="w-full h-40" style="background: var(--color-blush)"></div>
+      {% endif %}
+      <div class="p-5">
+        <h3
+          class="font-display text-xl"
+          style="color: var(--color-forest-dark)"
+        >
+          {{ venue.name }}
+        </h3>
+        <p class="text-xs mt-1" style="color: var(--color-sage)">
+          {{ venue.location }}
+        </p>
+        <p class="text-sm mt-3" style="color: var(--color-ink)">
+          {{ venue.description }}
+        </p>
+        <div class="mt-4 flex items-center justify-between text-sm">
+          <span style="color: var(--color-forest)"
+            >Up to {{ venue.capacity }} guests</span
+          >
+          <span class="font-semibold" style="color: var(--color-gold)"
+            >K{{ '%.0f'|format(venue.price_per_event) }}</span
+          >
+        </div>
+
+        <button
+          type="button"
+          onclick="document.getElementById('book-form-{{ venue.id }}').classList.toggle('hidden')"
+          class="btn-primary w-full mt-4 py-2.5 rounded-full text-sm font-semibold"
+        >
+          Book this venue
+        </button>
+
+        <form
+          id="book-form-{{ venue.id }}"
+          method="POST"
+          action="{{ url_for('book_appointment') }}"
+          class="hidden mt-4 space-y-3 pt-4 border-t"
+          style="border-color: var(--color-line)"
+        >
+          <input type="hidden" name="venue_id" value="{{ venue.id }}" />
+          <div>
+            <label
+              class="block text-xs font-medium mb-1"
+              style="color: var(--color-ink)"
+              >Event date</label
+            >
+            <input
+              type="date"
+              name="event_date"
+              required
+              class="w-full rounded-lg border px-3 py-2 text-sm"
+              style="border-color: var(--color-line)"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-medium mb-1"
+              style="color: var(--color-ink)"
+              >Guest count</label
+            >
+            <input
+              type="number"
+              name="guest_count"
+              min="1"
+              max="{{ venue.capacity }}"
+              class="w-full rounded-lg border px-3 py-2 text-sm"
+              style="border-color: var(--color-line)"
+            />
+          </div>
+          <div>
+            <label
+              class="block text-xs font-medium mb-1"
+              style="color: var(--color-ink)"
+              >Notes (optional)</label
+            >
+            <textarea
+              name="notes"
+              rows="2"
+              class="w-full rounded-lg border px-3 py-2 text-sm"
+              style="border-color: var(--color-line)"
+              placeholder="Anything the coordinator should know"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="btn-gold w-full py-2.5 rounded-full text-sm font-semibold"
+          >
+            Send booking request
+          </button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <p class="text-sm col-span-full" style="color: var(--color-sage)">
+      No venues are available right now — check back soon.
+    </p>
+    {% endfor %}
+  </div>
+  <p
+    id="no-results"
+    class="hidden mt-6 text-sm"
+    style="color: var(--color-sage)"
+  >
+    No venues match that search.
+  </p>
+</section>
+{% endblock %} {% block scripts %}
+<script>
+  function filterVenues(query) {
+    const q = query.trim().toLowerCase();
+    const cards = document.querySelectorAll("#venue-grid > div[data-name]");
+    let visibleCount = 0;
+    cards.forEach((card) => {
+      const matches =
+        card.dataset.name.includes(q) || card.dataset.location.includes(q);
+      card.classList.toggle("hidden", !matches);
+      if (matches) visibleCount++;
+    });
+    document
+      .getElementById("no-results")
+      .classList.toggle("hidden", visibleCount !== 0);
+  }
+</script>
+{% endblock %}
