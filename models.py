@@ -24,6 +24,9 @@ class User(db.Model, UserMixin):
     appointments = db.relationship(
         "Appointment", backref="client", lazy=True, cascade="all, delete-orphan"
     )
+    reviews = db.relationship(
+        "Review", backref="author", lazy=True, cascade="all, delete-orphan"
+    )
 
     def set_password(self, raw_password: str) -> None:
         self.password_hash = generate_password_hash(raw_password)
@@ -55,6 +58,15 @@ class Venue(db.Model):
     appointments = db.relationship(
         "Appointment", backref="venue", lazy=True, cascade="all, delete-orphan"
     )
+    reviews = db.relationship(
+        "Review", backref="venue", lazy=True, cascade="all, delete-orphan"
+    )
+
+    @property
+    def average_rating(self):
+        if not self.reviews:
+            return None
+        return round(sum(r.rating for r in self.reviews) / len(self.reviews), 1)
 
     def to_dict(self):
         return {
@@ -87,3 +99,24 @@ class Appointment(db.Model):
 
     def __repr__(self):
         return f"<Appointment user={self.user_id} venue={self.venue_id} status={self.status}>"
+
+
+class Review(db.Model):
+    """
+    A client's review of a venue. Only clients with a *confirmed*
+    appointment at that venue are allowed to leave one (enforced in
+    the /venues/<id>/reviews route) — this keeps the feature tied to
+    a genuine booking rather than open to anyone.
+    """
+
+    __tablename__ = "reviews"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    venue_id = db.Column(db.Integer, db.ForeignKey("venues.id"), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)  # 1-5
+    comment = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Review user={self.user_id} venue={self.venue_id} rating={self.rating}>"

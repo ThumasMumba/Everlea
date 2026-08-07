@@ -47,6 +47,13 @@ endblock %} {% block content %}
           You're confirmed — go ahead and start planning the rest of your
           wedding for this date.
         </p>
+        <a
+          href="{{ url_for('add_review', venue_id=a.venue.id) }}"
+          class="btn-gold inline-block mt-3 px-5 py-2.5 rounded-full text-sm font-semibold text-center"
+        >
+          Leave a review
+        </a>
+
         {% elif a.status == 'rejected' %}
         <p class="mt-3 text-sm" style="color: #8a3527">
           This request wasn't approved. Feel free to request a different date or

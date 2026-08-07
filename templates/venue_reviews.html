@@ -1,0 +1,126 @@
+{% extends "base.html" %} {% block title %}{{ venue.name }} — Reviews —
+Everlea Weddings{% endblock %} {% block content %}
+<section class="max-w-3xl mx-auto px-6 py-12">
+  <a
+    href="{{ url_for('dashboard') }}"
+    class="text-xs font-semibold tracking-wide uppercase"
+    style="color: var(--color-sage)"
+    >&larr; Back to dashboard</a
+  >
+
+  <p
+    class="divider-leaf text-xs tracking-[0.2em] uppercase font-semibold mb-4 mt-6"
+    style="max-width: 180px"
+  >
+    Reviews
+  </p>
+  <h1 class="font-display text-4xl" style="color: var(--color-forest-dark)">
+    {{ venue.name }}
+  </h1>
+  <p class="text-sm mt-1" style="color: var(--color-sage)">
+    {{ venue.location }}
+  </p>
+
+  <div class="mt-4 flex items-center gap-3">
+    {% if venue.reviews %}
+    <span
+      class="font-display text-2xl"
+      style="color: var(--color-gold)"
+      >{{ venue.average_rating }} / 5</span
+    >
+    <span class="text-sm" style="color: var(--color-sage)"
+      >{{ reviews|length }} review{{ 's' if reviews|length != 1 else '' }}</span
+    >
+    {% else %}
+    <span class="text-sm" style="color: var(--color-sage)"
+      >No reviews yet for this venue.</span
+    >
+    {% endif %}
+  </div>
+
+  <!-- ============================ Leave a review ============================ -->
+  {% if can_review %}
+  <div
+    class="mt-8 rounded-xl border p-5"
+    style="border-color: var(--color-line); background: var(--color-white)"
+  >
+    <h2
+      class="font-display text-xl"
+      style="color: var(--color-forest-dark)"
+    >
+      Leave a review
+    </h2>
+    <form
+      method="post"
+      action="{{ url_for('add_review', venue_id=venue.id) }}"
+      class="mt-4 space-y-3"
+    >
+      <select
+        name="rating"
+        required
+        class="w-full rounded-lg border px-3 py-2 text-sm"
+        style="border-color: var(--color-line)"
+        title="Rating"
+      >
+        <option value="" disabled selected>Rating</option>
+        {% for n in range(5, 0, -1) %}
+        <option value="{{ n }}">{{ n }} / 5</option>
+        {% endfor %}
+      </select>
+      <textarea
+        name="comment"
+        rows="3"
+        placeholder="How was it? (optional)"
+        class="w-full rounded-lg border px-3 py-2 text-sm"
+        style="border-color: var(--color-line)"
+      ></textarea>
+      <button
+        type="submit"
+        class="btn-primary w-full py-2.5 rounded-full text-sm font-semibold"
+      >
+        Submit review
+      </button>
+    </form>
+  </div>
+  {% elif already_reviewed %}
+  <p class="mt-6 text-sm" style="color: var(--color-sage)">
+    You've already reviewed this venue — thanks for sharing your experience.
+  </p>
+  {% endif %}
+
+  <!-- ============================ Review list ============================ -->
+  <div class="mt-10 space-y-4">
+    {% for r in reviews %}
+    <div
+      class="rounded-xl border p-5"
+      style="border-color: var(--color-line); background: var(--color-white)"
+    >
+      <div class="flex items-center justify-between">
+        <span
+          class="font-semibold text-sm"
+          style="color: var(--color-forest-dark)"
+          >{{ r.author.name }}</span
+        >
+        <span class="text-xs" style="color: var(--color-sage)"
+          >{{ r.created_at.strftime('%d %b %Y') }}</span
+        >
+      </div>
+      <span
+        class="inline-block mt-2 font-semibold text-sm"
+        style="color: var(--color-gold)"
+        >{{ r.rating }} / 5</span
+      >
+      {% if r.comment %}
+      <p class="text-sm mt-2" style="color: var(--color-ink)">
+        {{ r.comment }}
+      </p>
+      {% endif %}
+    </div>
+    {% else %}
+    <p class="text-sm" style="color: var(--color-sage)">
+      Be the first to review {{ venue.name }} once your booking is confirmed.
+    </p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
