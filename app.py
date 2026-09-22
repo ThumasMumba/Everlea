@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
-
+import os
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, redirect, url_for, flash, session, Response, jsonify
 from flask_login import (
     LoginManager,
@@ -15,6 +16,8 @@ from config import Config
 from extensions import db, login_manager
 from models import User, Venue, Appointment, Review
 from auth import role_required
+
+
 
 def create_app():
     app = Flask(__name__)
@@ -41,6 +44,15 @@ def create_app():
 
 app = create_app()
 
+UPLOAD_FOLDER = os.path.join(
+    app.static_folder,
+    "images",
+    "venues"
+)
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 
 def _is_ajax() -> bool:
     """True when the request came from a fetch()/XHR call rather than a normal form post."""
@@ -400,29 +412,53 @@ def reject_appointment(appointment_id):
 @login_required
 @role_required("admin")
 def add_venue():
-        name = request.form.get("name", "").strip()
-        location = request.form.get("location", "").strip()
-        description = request.form.get("description", "").strip()
-        capacity = request.form.get("capacity", type=int) or 0
-        price = request.form.get("price_per_event", type=float) or 0
-        image_url = request.form.get("image_url", "").strip()
 
-        if not name or not location:
-            flash("Venue name and location are required.", "error")
-            return redirect(url_for("admin_dashboard"))
+    name = request.form.get("name", "").strip()
+    location = request.form.get("location", "").strip()
+    description = request.form.get("description", "").strip()
+    capacity = request.form.get("capacity", type=int) or 0
+    price = request.form.get("price_per_event", type=float) or 0
 
-        venue = Venue(
-            name=name,
-            location=location,
-            description=description,
-            capacity=capacity,
-            price_per_event=price,
-            image_url=image_url or None,
-        )
-        db.session.add(venue)
-        db.session.commit()
-        flash(f"{name} added to the venue list.", "success")
+    image = request.files.get("image_url")
+
+    if not name or not location:
+        flash("Venue name and location are required.", "error")
         return redirect(url_for("admin_dashboard"))
+
+    image_url = None
+
+    if image and image.filename:
+        filename = secure_filename(image.filename)
+
+        upload_folder = os.path.join(
+            app.static_folder,
+            "images",
+            "venues"
+        )
+
+        os.makedirs(upload_folder, exist_ok=True)
+
+        image.save(
+            os.path.join(upload_folder, filename)
+        )
+
+        image_url = f"images/venues/{filename}"
+
+    venue = Venue(
+        name=name,
+        location=location,
+        description=description,
+        capacity=capacity,
+        price_per_event=price,
+        image_url=image_url,
+    )
+
+    db.session.add(venue)
+    db.session.commit()
+
+    flash(f"{name} added to the venue list.", "success")
+
+    return redirect(url_for("admin_dashboard"))
 
 @app.route("/admin/reviews/<int:review_id>/delete", methods=["POST"])
 @login_required

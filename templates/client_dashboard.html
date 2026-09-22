@@ -99,9 +99,9 @@ endblock %} {% block content %}
     >
       {% if venue.image_url %}
       <img
-        src="{{ venue.image_url }}?auto=format&fit=crop&w=600&q=60"
+        src="{{ url_for('static', filename=venue.image_url) }}"
         alt="{{ venue.name }}"
-        class="w-full h-40 object-cover"
+        class="w-full h-48 object-cover rounded-lg mb-4"
       />
       {% else %}
       <div class="w-full h-40" style="background: var(--color-blush)"></div>

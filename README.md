@@ -28,6 +28,8 @@ wedding-planner/
     ├── client_dashboard.html # Client dashboard
     ├── admin_dashboard.html  # Admin dashboard
     └── error.html
+    └── venue_reviews.html    # Client - Review page
+
 ```
 
 ## Setup

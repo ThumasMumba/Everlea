@@ -120,12 +120,12 @@ endblock %} {% block content %}
               <div id="actions-{{ a.id }}">
                 {% if a.status == 'pending' %}
                 <div class="flex gap-2">
-                 <button
+                  <button
                     type="button"
                     data-id="{{ a.id }}"
                     data-action="approve"
                     class="btn-primary px-3 py-1.5 rounded-full text-xs font-semibold"
-                     onclick="reviewAppointment({{ a.id }}, 'approve', this)"
+                    onclick="reviewAppointment({{ a.id }}, 'approve', this)"
                   >
                     Accept
                   </button>
@@ -134,7 +134,7 @@ endblock %} {% block content %}
                     data-id="{{ a.id }}"
                     data-action="reject"
                     class="btn-primary px-3 py-1.5 rounded-full text-xs font-semibold"
-                     onclick="reviewAppointment({{ a.id }}, 'reject', this)"
+                    onclick="reviewAppointment({{ a.id }}, 'reject', this)"
                   >
                     Reject
                   </button>
@@ -223,6 +223,7 @@ endblock %} {% block content %}
         method="POST"
         action="{{ url_for('add_venue') }}"
         class="mt-4 space-y-3 rounded-xl border p-5"
+        enctype="multipart/form-data"
         style="border-color: var(--color-line); background: var(--color-white)"
       >
         <input
@@ -268,9 +269,9 @@ endblock %} {% block content %}
           />
         </div>
         <input
-          type="url"
+          type="file"
           name="image_url"
-          placeholder="Image URL (optional)"
+          accept="images/*"
           class="w-full rounded-lg border px-3 py-2 text-sm"
           style="border-color: var(--color-line)"
         />
